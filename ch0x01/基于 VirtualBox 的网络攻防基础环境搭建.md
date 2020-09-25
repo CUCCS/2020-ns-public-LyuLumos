@@ -41,6 +41,8 @@
     ![](imgs/all.png)
 
 3. 按照以下拓扑图进行网络配置。
+   
+  ![](imgs/map.PNG)
 
 - 网关（Debian-Gateway）的配置
   - 配置四块网卡分别为"NAT网络"“Host Only”“内部网络（intnet1）”和“内部网络（intnet2）”。
@@ -54,13 +56,13 @@
     ```
     ![](imgs/enp0s8.png)
   - 确认ssh服务开启后，通过VScode远程连接到虚拟机。~~就可以愉快地复制粘贴了。~~
-  - 按照[黄大发的gist](https://gist.github.com/c4pr1c3/8d1a4550aa550fabcbfb50fad9718db1)更改`/etc/network/interfaces`配置。之后重启服务并开启所有Down状态的网卡。配置完成后如下图所示。
+  - 按照[黄大发的gist](https://gist.github.com/c4pr1c3/8d1a4525aa525fabcbfb25fad9718db1)更改`/etc/network/interfaces`配置。之后重启服务并开启所有Down状态的网卡。配置完成后如下图所示。
     ```bash
     systemctl restart networking
     /sbin/ifup enp0s8 # etc
     ```
     ![](imgs/enp0sAll.png)
-  - 安装dnsmasq服务器并进行相关的配置，[链接同上](https://gist.github.com/c4pr1c3/8d1a4550aa550fabcbfb50fad9718db1)。
+  - 安装dnsmasq服务器并进行相关的配置，[链接同上](https://gist.github.com/c4pr1c3/8d1a4525aa525fabcbfb25fad9718db1)。
     ```bash
     apt install dnsmasq
     cp /etc/dnsmasq.conf /etc/dnsmasq.conf.bak
@@ -69,7 +71,7 @@
     ```
     ![](imgs/dnsmasq.png)
 - 配置靶机
-  - XP靶机需要将网络改为拓扑图对应的内部网络，将控制芯片改成`Intel Pro/1000T 服务器`。
+  - XP靶机需要将网络改为拓扑图对应的内部网络，将控制芯片改成`Intel Pro/1000T 服务器`。XP的网卡驱动不支持默认芯片。
   ![](imgs/XP-network.png)
   - Debian和Kali靶机只需要将网络改为拓扑图对应的内部网络。
 - 查看当前ip:
@@ -77,10 +79,10 @@
 
 <center>
 <figure>
-<img src="imgs/kali_attacker_ip.png"  style="zoom: 50%;"/>
-<img src="imgs/kali_victim_ip.png"  style="zoom: 50%;"/>
-<img src="imgs/xp1_ip.png"  style="zoom: 50%;"/>
-<img src="imgs/xp2_ip.png"  style="zoom: 50%;"/>
+<img src="imgs/kali_attacker_ip.png"  style="zoom: 25%;"/>
+<img src="imgs/kali_victim_ip.png"  style="zoom: 25%;"/>
+<img src="imgs/xp1_ip.png"  style="zoom: 25%;"/>
+<img src="imgs/xp2_ip.png"  style="zoom: 25%;"/>
 </figure>
 </center>
 
@@ -105,10 +107,10 @@
 
 <center>
 <figure>
-<img src="imgs/VpingA1.png"  style="zoom: 50%;"/>
-<img src="imgs/VpingA2.png"  style="zoom: 50%;"/>
-<img src="imgs/VpingA3.png"  style="zoom: 50%;"/>
-<img src="imgs/VpingA4.png"  style="zoom: 50%;"/>
+<img src="imgs/VpingA1.png"  style="zoom: 25%;"/>
+<img src="imgs/VpingA2.png"  style="zoom: 25%;"/>
+<img src="imgs/VpingA3.png"  style="zoom: 25%;"/>
+<img src="imgs/VpingA4.png"  style="zoom: 25%;"/>
 </figure>
 </center>
 
@@ -143,8 +145,7 @@
 ### 参考
 
 - [黄大的Debian安装链接](https://phoenixnap.com/kb/how-to-install-debian-10-buster)
-- [黄大的gist]((https://gist.github.com/c4pr1c3/8d1a4550aa550fabcbfb50fad9718db1))
+- [黄大的gist]((https://gist.github.com/c4pr1c3/8d1a4525aa525fabcbfb25fad9718db1))
 - [揭青莹师姐的作业](https://github.com/CUCCS/2019-NS-Public-YanhuiJessica/tree/ns0x01/ns-0x01)
-
-
+- [debian中更新源sources，apt安装net-tools（netstat等命令）](https://blog.csdn.net/misisippi68/article/details/105012605/)
 
