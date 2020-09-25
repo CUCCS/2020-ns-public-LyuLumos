@@ -32,6 +32,9 @@
 
     ![](imgs/multi.png)
 
+    效果如图。
+    ![](imgs/twokali.png)
+
 2. 各个虚拟机的安装。
    
 - kali我用的是官网的ova文件，不需要配置，但是需要将USB2.0切换至USB1.1，否则VirtualBox会报错。
@@ -131,6 +134,7 @@
   apt insatll tcpdump
   /usr/sbin/tcpdump -i enp0s8 # etc
   ```
+  网关开启时
 
   ![](imgs/kali_attacker_internet.png)
 
@@ -142,10 +146,14 @@
 
   ![](imgs/xp-victim-2-internet.png)
 
+  关闭网关后
+
+  ![](imgs/all_ping-false.png)
+
 ### 参考
 
 - [黄大的Debian安装链接](https://phoenixnap.com/kb/how-to-install-debian-10-buster)
-- [黄大的gist]((https://gist.github.com/c4pr1c3/8d1a4525aa525fabcbfb25fad9718db1))
+- [黄大的gist](https://gist.github.com/c4pr1c3/8d1a4525aa525fabcbfb25fad9718db1)
 - [揭青莹师姐的作业](https://github.com/CUCCS/2019-NS-Public-YanhuiJessica/tree/ns0x01/ns-0x01)
 - [debian中更新源sources，apt安装net-tools（netstat等命令）](https://blog.csdn.net/misisippi68/article/details/105012605/)
 
