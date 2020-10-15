@@ -32,7 +32,7 @@ from scapy.all import *
 pkt = IP(dst="")
 ls(pkt)
 pkt.show()
-summary(pkt) #
+summary(pkt)
 # 发送数据包
 send(pkt)  # 发送第三层数据包，但不会受到返回的结果。
 sr(pkt)  # 发送第三层数据包，返回两个结果，分别是接收到响应的数据包和未收到响应的数据包。
@@ -46,7 +46,6 @@ sniff(iface="wlan1",count=100,filter="tcp")
 pkt = IP("...")/TCP(dport=[n for n in range(22, 3389)], flags="S")
 ans, uans = sr(pkt)
 ans.summary() # flag为SA表示开放，RA表示关闭
-
 ```
 
 
@@ -58,3 +57,5 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 ### 参考
 
 - [scapy2.4.4文档](https://scapy.readthedocs.io/en/latest/)
+- [Port Scanning Using Scapy](https://resources.infosecinstitute.com/port-scanning-using-scapy/)
+- [揭青莹师姐的作业](https://github.com/CUCCS/2019-NS-Public-YanhuiJessica/blob/ns0x05/ns-0x05/README.md)
