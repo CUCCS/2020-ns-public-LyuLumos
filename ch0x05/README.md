@@ -109,8 +109,28 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 ![](img/1.png)
 
-
+（以下连续三幅图片分别为 ``运行代码测试的结果``，``靶机抓包的结果``，``使用nmap复刻的结果``）
 #### TCP connect scan
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+
+def tcpconnect(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="S"), timeout=timeout)
+    if (pkts is None):
+        print("FILTER")
+    elif(pkts.haslayer(TCP)):
+        if(pkts[1].flags == 'AS'):
+            print("OPEN")
+        elif(pkts[1].flags == 'AR'):
+            print("CLOSE")
+
+
+tcpconnect('172.16.111.132', 80)
+```
+
 - Closed
   
   ![](img/2.png)
@@ -131,7 +151,31 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 
 #### TCP stealth scan
+```python
+#! /usr/bin/python
 
+from scapy.all import *
+
+
+def tcpstealthscan(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="S"), timeout=10)
+    if (pkts is None):
+        print("Filtered")
+    elif(pkts.haslayer(TCP)):
+        if(pkts.getlayer(TCP).flags == 0x12):
+            send_rst = sr(IP(dst=dst_ip) /
+                          TCP(dport=dst_port, flags="R"), timeout=10)
+            print("Open")
+        elif (pkts.getlayer(TCP).flags == 0x14):
+            print("Closed")
+        elif(pkts.haslayer(ICMP)):
+            if(int(pkts.getlayer(ICMP).type) == 3 and int(stealth_scan_resp.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+                print("Filtered")
+
+
+tcpstealthscan('172.16.111.132', 80)
+
+```
 - Closed
   
   ![](img/11.png)
@@ -152,6 +196,26 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 #### TCP Xmas scan
 
+```python
+#! /usr/bin/python
+from scapy.all import *
+
+
+def Xmasscan(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="FPU"), timeout=10)
+    if (pkts is None):
+        print("Open|Filtered")
+    elif(pkts.haslayer(TCP)):
+        if(pkts.getlayer(TCP).flags == 0x14):
+            print("Closed")
+    elif(pkts.haslayer(ICMP)):
+        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+            print("Filtered")
+
+
+Xmasscan('172.16.111.132', 80)
+```
+
 - Closed
   
   ![](img/20.png)
@@ -171,6 +235,25 @@ ans.summary() # flag为SA表示开放，RA表示关闭
   ![](img/29.png)
 
 #### TCP fin scan
+```python
+#! /usr/bin/python
+from scapy.all import *
+
+
+def finscan(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="F"), timeout=10)
+    if (pkts is None):
+        print("Open|Filtered")
+    elif(pkts.haslayer(TCP)):
+        if(pkts.getlayer(TCP).flags == 0x14):
+            print("Closed")
+    elif(pkts.haslayer(ICMP)):
+        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+            print("Filtered")
+
+
+finscan('172.16.111.132', 80)
+```
 
 - Closed
   
@@ -191,7 +274,25 @@ ans.summary() # flag为SA表示开放，RA表示关闭
   ![](img/38.png)
 
 #### TCP null scan
+```python
+#! /usr/bin/python
+from scapy.all import *
 
+
+def nullscan(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags=""), timeout=10)
+    if (pkts is None):
+        print("Open|Filtered")
+    elif(pkts.haslayer(TCP)):
+        if(pkts.getlayer(TCP).flags == 0x14):
+            print("Closed")
+    elif(pkts.haslayer(ICMP)):
+        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+            print("Filtered")
+
+
+nullscan('172.16.111.132', 80)
+```
 - Closed
   
   ![](img/39.png)
@@ -212,6 +313,28 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 
 #### UDP scan
+```python
+from scapy.all import *
+
+
+def udpscan(dst_ip, dst_port, dst_timeout=10):
+    resp = sr1(IP(dst=dst_ip)/UDP(dport=dst_port), timeout=dst_timeout)
+    if (resp is None):
+        print("Open|Filtered")
+    elif (resp.haslayer(UDP)):
+        print("Open")
+    elif(resp.haslayer(ICMP)):
+        if(int(resp.getlayer(ICMP).type) == 3 and int(resp.getlayer(ICMP).code) == 3):
+            print("Closed")
+        elif(int(resp.getlayer(ICMP).type) == 3 and int(resp.getlayer(ICMP).code) in [1, 2, 9, 10, 13]):
+            print("Filtered")
+        elif(resp.haslayer(IP) and resp.getlayer(IP).proto == IP_PROTOS.udp):
+            print("Open")
+
+
+udpscan('172.16.111.132', 53)
+
+```
 
 - Closed
   
@@ -233,12 +356,15 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 #### 其他实验问题的回答
 
-> 提供每一次扫描测试的抓包结果并分析与课本中的扫描方法原理是否相符？如果不同，试分析原因；
+- 提供每一次扫描测试的抓包结果并分析与课本中的扫描方法原理是否相符？如果不同，试分析原因；
 
-[抓包结果]()
+  抓包以截图形式提供在每次扫描结果中。
 
-基本相符。
+  基本相符。看了一下[nmap文档](https://nmap.org/book/)，原理是相同的。但是实操中nmap要快很多，个人分析是python调用包的问题。
 
+- 关于不同方法得到的端口状态不同的原因
+
+  > 黄大：网络扫描不是一个『确定性』方法，网络协议是一个「状态机」，不同输入会产生不同的响应状态。一个开放/关闭/被过滤的端口，对于不同的输入按照协议设计和实现，自然会有不同的预定义响应方法。同一种协议设计，也会有不同的协议实现，这些也会导致不同协议栈实现的服务器即使收到相同的packet，也会回应不同的 packet。所以，所谓『得到不同的状态结果』这句话是一个病句，缺少主语。补全之后是：网络扫描算法『根据目标端口的响应行为』**推断**这个端口有不同的状态结果
 
 ### 参考
 
