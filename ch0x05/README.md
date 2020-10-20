@@ -24,7 +24,10 @@
 
 ### 实验环境
 
-- python3 + [scapy](https://scapy.net/)2.4
+- python 3.8.4
+- [scapy](https://scapy.net/) 2.4.3
+- nmap 7.80
+- Linux kali 5.7.0-kali1-amd64
 
 ### 实验要求(完成度)
 
@@ -111,71 +114,32 @@ ans.summary() # flag为SA表示开放，RA表示关闭
 
 （以下连续三幅图片分别为 ``运行代码测试的结果``，``靶机抓包的结果``，``使用nmap复刻的结果``）
 #### TCP connect scan
-```python
-#! /usr/bin/python
 
-from scapy.all import *
-
-
-def tcpconnect(dst_ip, dst_port, timeout=10):
-    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="S"), timeout=timeout)
-    if (pkts is None):
-        print("FILTER")
-    elif(pkts.haslayer(TCP)):
-        if(pkts[1].flags == 'AS'):
-            print("OPEN")
-        elif(pkts[1].flags == 'AR'):
-            print("CLOSE")
-
-
-tcpconnect('172.16.111.132', 80)
-```
+[code](code/tcp_connect_scan.py)
 
 - Closed
   
-  ![](img/2.png)
-  ![](img/3.png)
+  ![](img/tcpconnect_closed1.PNG)
+  ![](img/tcpconnect_closed2.PNG)
   ![](img/8.png)
 
 - Open
 
-  ![](img/4.png)
-  ![](img/5.png)
+  ![](img/tcpconnect_open1.PNG)
+  ![](img/tcpconnect_open2.PNG)
   ![](img/9.png)
 
 - Filtered
   
-  ![](img/6.png)
-  ![](img/7.png)
+  ![](img/tcpconnect_filter1.PNG)
+  ![](img/tcpconnect_filter2.PNG)
   ![](img/10.png)
 
 
 #### TCP stealth scan
-```python
-#! /usr/bin/python
 
-from scapy.all import *
+[Code](code/tcp_stealth_scan.py)
 
-
-def tcpstealthscan(dst_ip, dst_port, timeout=10):
-    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="S"), timeout=10)
-    if (pkts is None):
-        print("Filtered")
-    elif(pkts.haslayer(TCP)):
-        if(pkts.getlayer(TCP).flags == 0x12):
-            send_rst = sr(IP(dst=dst_ip) /
-                          TCP(dport=dst_port, flags="R"), timeout=10)
-            print("Open")
-        elif (pkts.getlayer(TCP).flags == 0x14):
-            print("Closed")
-        elif(pkts.haslayer(ICMP)):
-            if(int(pkts.getlayer(ICMP).type) == 3 and int(stealth_scan_resp.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
-                print("Filtered")
-
-
-tcpstealthscan('172.16.111.132', 80)
-
-```
 - Closed
   
   ![](img/11.png)
@@ -196,25 +160,7 @@ tcpstealthscan('172.16.111.132', 80)
 
 #### TCP Xmas scan
 
-```python
-#! /usr/bin/python
-from scapy.all import *
-
-
-def Xmasscan(dst_ip, dst_port, timeout=10):
-    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="FPU"), timeout=10)
-    if (pkts is None):
-        print("Open|Filtered")
-    elif(pkts.haslayer(TCP)):
-        if(pkts.getlayer(TCP).flags == 0x14):
-            print("Closed")
-    elif(pkts.haslayer(ICMP)):
-        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
-            print("Filtered")
-
-
-Xmasscan('172.16.111.132', 80)
-```
+[Code](code/tcp_xmas_scan.py)
 
 - Closed
   
@@ -235,25 +181,7 @@ Xmasscan('172.16.111.132', 80)
   ![](img/29.png)
 
 #### TCP fin scan
-```python
-#! /usr/bin/python
-from scapy.all import *
-
-
-def finscan(dst_ip, dst_port, timeout=10):
-    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="F"), timeout=10)
-    if (pkts is None):
-        print("Open|Filtered")
-    elif(pkts.haslayer(TCP)):
-        if(pkts.getlayer(TCP).flags == 0x14):
-            print("Closed")
-    elif(pkts.haslayer(ICMP)):
-        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
-            print("Filtered")
-
-
-finscan('172.16.111.132', 80)
-```
+[Code](code/tcp_fin_scan.py)
 
 - Closed
   
@@ -274,25 +202,7 @@ finscan('172.16.111.132', 80)
   ![](img/38.png)
 
 #### TCP null scan
-```python
-#! /usr/bin/python
-from scapy.all import *
-
-
-def nullscan(dst_ip, dst_port, timeout=10):
-    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags=""), timeout=10)
-    if (pkts is None):
-        print("Open|Filtered")
-    elif(pkts.haslayer(TCP)):
-        if(pkts.getlayer(TCP).flags == 0x14):
-            print("Closed")
-    elif(pkts.haslayer(ICMP)):
-        if(int(pkts.getlayer(ICMP).type) == 3 and int(pkts.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
-            print("Filtered")
-
-
-nullscan('172.16.111.132', 80)
-```
+[Code](code/tcp_null_scan.py)
 - Closed
   
   ![](img/39.png)
@@ -313,28 +223,7 @@ nullscan('172.16.111.132', 80)
 
 
 #### UDP scan
-```python
-from scapy.all import *
-
-
-def udpscan(dst_ip, dst_port, dst_timeout=10):
-    resp = sr1(IP(dst=dst_ip)/UDP(dport=dst_port), timeout=dst_timeout)
-    if (resp is None):
-        print("Open|Filtered")
-    elif (resp.haslayer(UDP)):
-        print("Open")
-    elif(resp.haslayer(ICMP)):
-        if(int(resp.getlayer(ICMP).type) == 3 and int(resp.getlayer(ICMP).code) == 3):
-            print("Closed")
-        elif(int(resp.getlayer(ICMP).type) == 3 and int(resp.getlayer(ICMP).code) in [1, 2, 9, 10, 13]):
-            print("Filtered")
-        elif(resp.haslayer(IP) and resp.getlayer(IP).proto == IP_PROTOS.udp):
-            print("Open")
-
-
-udpscan('172.16.111.132', 53)
-
-```
+[Code](code/udp_scan.py)
 
 - Closed
   
@@ -360,7 +249,7 @@ udpscan('172.16.111.132', 53)
 
   抓包以截图形式提供在每次扫描结果中。
 
-  基本相符。看了一下[nmap文档](https://nmap.org/book/)，原理是相同的。但是实操中nmap要快很多，个人分析是python调用包的问题。
+  完全相符。看了一下[nmap文档](https://nmap.org/book/)，原理是相同的。但是实操中nmap要快很多，个人分析是python调用包的问题。
 
 - 关于不同方法得到的端口状态不同的原因
 
