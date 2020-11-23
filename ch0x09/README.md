@@ -42,6 +42,8 @@ tshark -i eth1 -f "port not 22" -w 1_tshark.pcap
 ```
 ![](img/3.png)
 
+抓到的包在这里。[1_tshark.pcap](file/1_tshark.pcap),
+[snort.log.1605598843](file/snort.log.1605598843)
 
 ### 实验二：配置并启用snort内置规则
 
