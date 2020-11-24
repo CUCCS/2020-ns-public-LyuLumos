@@ -6,7 +6,7 @@
 使用Fail2Ban练习安全加固。
 ### 实验流程
 #### 拓扑
-![](imgs/map.jpg)
+![](imgs/map.png)
 两台主机可以相互联通。
 #### Fail2Ban 安装
 黄大提供的这个[文档](https://www.linode.com/docs/guides/using-fail2ban-to-secure-your-server-a-tutorial/)上给了非常详尽的操作，安装顺利得可怕。
@@ -31,6 +31,7 @@ maxretry = 5
     
 
 - 等待1分钟后，恢复正常。
+  
     ![](imgs/3.png)
 
 - 查看`auth.log`。可以看出，在test2上每第三次输入错误密码会导致直接导致连接中断，这次操作没有被计算到会被禁的5次操作里面。等待1分钟后，原先的登录请求仍会被执行。
