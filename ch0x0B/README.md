@@ -1,13 +1,5 @@
 # 常见蜜罐体验和探索
-- [常见蜜罐体验和探索](#常见蜜罐体验和探索)
-  - [实验目的](#实验目的)
-  - [实验环境](#实验环境)
-  - [实验要求](#实验要求)
-  - [实验过程](#实验过程)
-    - [低交互蜜罐 Twisted Honeypots](#低交互蜜罐-twisted-honeypots)
-    - [中等交互蜜罐  Cowrie SSH Honeypot](#中等交互蜜罐--cowrie-ssh-honeypot)
-  - [常见的蜜罐识别和检测方法](#常见的蜜罐识别和检测方法)
-  - [参考](#参考)
+
 ## 实验目的
 
 - 了解蜜罐的分类和基本原理
@@ -15,7 +7,13 @@
 - 掌握常见蜜罐的搭建和使用
 
 ## 实验环境
+- 拓扑
 
+  ![](imgs/18.png)
+
+- 虚拟机：Kali Rolling 2020.3 x64
+- twisted-honeypots
+- cowrie
 
 ## 实验要求
 
@@ -72,7 +70,7 @@
 
 - Usage
 
-    To start/stop the services:
+  - To start/stop the services:
 
     ```bash
     $ sudo ./start.sh
@@ -80,7 +78,7 @@
     ```
 
 
-- To monitor the current execution:
+  - To monitor the current execution:
 
     ```bash
     $ ./monitor.sh
@@ -101,7 +99,7 @@
 
     ![](imgs/4.png)
 
-    从日志里可以看出有一次连接
+    从日志里可以看出有一次连接。但是没有记录端口扫描的记录。
 
 ### 中等交互蜜罐  Cowrie SSH Honeypot
 
