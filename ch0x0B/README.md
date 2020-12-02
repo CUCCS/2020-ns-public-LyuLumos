@@ -1,5 +1,13 @@
 # 常见蜜罐体验和探索
-
+- [常见蜜罐体验和探索](#常见蜜罐体验和探索)
+  - [实验目的](#实验目的)
+  - [实验环境](#实验环境)
+  - [实验要求](#实验要求)
+  - [实验过程](#实验过程)
+    - [低交互蜜罐 Twisted Honeypots](#低交互蜜罐-twisted-honeypots)
+    - [中等交互蜜罐  Cowrie SSH Honeypot](#中等交互蜜罐--cowrie-ssh-honeypot)
+  - [常见的蜜罐识别和检测方法](#常见的蜜罐识别和检测方法)
+  - [参考](#参考)
 ## 实验目的
 
 - 了解蜜罐的分类和基本原理
@@ -9,13 +17,12 @@
 ## 实验环境
 
 
-
 ## 实验要求
 
 - [x] 记录蜜罐的详细搭建过程；
 - [x] 使用`nmap`扫描搭建好的蜜罐并分析扫描结果，同时分析「 nmap 扫描期间」蜜罐上记录得到的信息；
 - [x] 如何辨别当前目标是一个「蜜罐」？以自己搭建的蜜罐为例进行说明；
-- [ ] （可选）总结常见的蜜罐识别和检测方法；
+- [x] （可选）总结常见的蜜罐识别和检测方法；
 - [ ] （可选）基于 canarytokens 搭建蜜信实验环境进行自由探索型实验
 
 ## 实验过程
@@ -27,7 +34,7 @@
 
     该蜜罐GitHub仓库主页上提供了安装说明，操作极其简单，界面也比较友好。同时也满足了实验需求。
 
-    （在仓库的贡献者里面还发现了揭师姐，师姐太强了！jdltxdy！）
+    （在仓库的贡献者里面还发现了揭师姐，jdltxdy！）
 
     界面长这样。
 
@@ -134,25 +141,51 @@
 
     ![](imgs/11.png)
 
+    注：这里`apt正常`的意思不是apt命令可以正常使用，而是系统的提示是正常的，无法区别是不是蜜罐，像debian10等系统本身也是没有apt的。
+
   - 怀疑当前环境是蜜罐的点
 
     1. 连接约3min中自动断开。
 
-    ![](imgs/12.png)
+        ![](imgs/12.png)
 
     2. 表面上可以ping，但是出现了比较诡异的结果，ping第一次结果被第二次使用，可能是没有给蜜罐分配太多资源。
 
-    ![](imgs/13.png)
+        ![](imgs/13.png)
 
     3. $PATH 赤裸裸的暴露...
    
-    ![](imgs/14.png)
+        ![](imgs/14.png)
 
     4. `rsb_release -a` 命令
-    5. `apt-get update/remove`等命令无法使用，使用`install`后安装的包无法正常使用。
 
- <!-- TO-DO -->
-<!-- ## 未解决
+        ![](imgs/17.png)
+
+    5. `apt-get update/remove`等命令无法使用（root权限仍提示Permission Denied），使用`install`后安装的包无法正常使用。
+
+        ![](imgs/16.png)
+
+## 常见的蜜罐识别和检测方法
+
+> 本部分参考本次实验报告和 
+> - [知乎 - 如何判断是不是进入了蜜罐？](https://www.zhihu.com/question/31213254/answer/137153019)
+> - [Is it possible to detect a honeypot?](https://security.stackexchange.com/questions/90642/is-it-possible-to-detect-a-honeypot)
+> - [How to detect a HoneyPot?](https://www.ethicalhacker.net/forums/topic/how-to-detect-a-honeypot/)
+> - [IEEE - Detecting honeypots and other suspicious environments](https://www.ei.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2012/08/07/Honeypots-IEEE05.pdf)
+>  
+
+
+- 经验和个人感觉，专业安全工程师可能直觉就能判断出来？（反正我没感觉:P
+- 常规命令的检测。如本实验所用的 `echo $PATH` 等各种命令，可以上手来一套。这里不展开说明。
+- 部分低交互蜜罐，如dionaea，使用nmap请求哪个端口就会开放哪个端口。
+- 蜜罐攻陷的成本是非常低的。漏洞过于明显的系统值得被怀疑。
+- 给web服务器发送大量http请求，导致web服务器抢占大量计算机资源用来处理请求。这样就会让蜜罐的反应慢下来。
+- 检测UML(User Mode Linux)。[论文的III-A](https://www.ei.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2012/08/07/Honeypots-IEEE05.pdf)阐述了具体操作。
+- 数据包时间戳分析、分析低交互蜜罐产生的网络响应来寻找差异、环境不真实导致穿帮。
+
+<!--话说我要是不取消注释是不是就不会有人看这部分了 
+
+## 未解决
 - 问题：
 为什么twisted-honeypots ssh无法连接
 
