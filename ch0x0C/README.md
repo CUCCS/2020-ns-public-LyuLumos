@@ -101,16 +101,15 @@ redef Site::local_nets = { 192.150.11.0/24 };
 
 至此，基于这个发现就可以进行逆向倒推，寻找入侵线索了。
 通过阅读 `/usr/local/zeek/share/zeek/base/files/extract/main.zeek` 的源代码
-```zeek
-function on_add(f: fa_file, args: Files::AnalyzerArgs)
-{
-if ( ! args?$extract_filename )
-args$extract_filename = cat("extract-", f$last_active, "-", f$source,
-"-", f$id);
-f$info$extracted = args$extract_filename;
-args$extract_filename = build_path_compressed(prefix, args$extract_filename);
-f$info$extracted_cutoff = F;
-mkdir(prefix);
+```php
+function on_add(f: fa_file, args: Files::AnalyzerArgs) {
+	if ( ! args?$extract_filename )
+		args$extract_filename = cat("extract-", f$last_active, "-", f$source,
+		                            "-", f$id);
+	f$info$extracted = args$extract_filename;
+	args$extract_filename = build_path_compressed(prefix, args$extract_filename);
+	f$info$extracted_cutoff = F;
+	mkdir(prefix);
 }
 ```
 我们了解到该文件名的最右一个-右侧对应的字符串 `FutkFK231QTWleGBs9` 是 `files.log` 中的文件唯一标识。
@@ -137,16 +136,16 @@ redef FTP::default_capture_password = T;
 课本上关于《Zeek 的一些其他技巧》部分提供了一些查看文件的比较有用的命令。
 
 * 使用正确的分隔符进行过滤显示的重要性
-```bash
-# 从头开始查看日志文件，显示前1行
-head -n1 conn.log
-# Bro的日志文件默认使用的分隔符显示为ASCII码\x09，通过以下命令可以查看该ASCII码对应的“可打印字符”
-echo -n -e '\x09' | hexdump -c
-# 使用awk打印给定日志文件的第N列数据
-awk -F '\t' '{print $3}' conn.log 
-```
+    ```bash
+    # 从头开始查看日志文件，显示前1行
+    head -n1 conn.log
+    # Bro的日志文件默认使用的分隔符显示为ASCII码\x09，通过以下命令可以查看该ASCII码对应的“可打印字符”
+    echo -n -e '\x09' | hexdump -c
+    # 使用awk打印给定日志文件的第N列数据
+    awk -F '\t' '{print $3}' conn.log 
+    ```
 
-![](imgs/head.png)
+    ![](imgs/head.png)
 
 * 查看Bro的超长行日志时的横向滚动技巧
     ```bash
