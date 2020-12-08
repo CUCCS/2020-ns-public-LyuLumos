@@ -5,7 +5,7 @@
 
 ## 实验环境
 
-这次只有一个主机，详细环境如下：
+本次实验只有一个主机，详细环境如下：
 
 ```bash
  cat /etc/os-release  
@@ -30,7 +30,7 @@
 
 ### Attention
 
-课本上说明了bro到zeek的变更，但是由于软件更新并且校内服务器无法方位，所以本次实验安装的是官网最新版本的zeek3.2.2，除了安装外本次实验涉及到的操作和代码都没有区别。
+课本上说明了bro到zeek的变更，但是由于软件更新并且校内服务器无法访问，所以本次实验安装的是官网最新版本的zeek3.2.2，除了安装外本次实验涉及到的操作和代码都没有区别。
 
 ### 安装 zeek
 
@@ -135,7 +135,6 @@ redef FTP::default_capture_password = T;
 ### 关于显示的问题
 
 课本上关于《Zeek 的一些其他技巧》部分提供了一些查看文件的比较有用的命令。
-### 
 
 * 使用正确的分隔符进行过滤显示的重要性
 ```bash
@@ -150,22 +149,22 @@ awk -F '\t' '{print $3}' conn.log
 ![](imgs/head.png)
 
 * 查看Bro的超长行日志时的横向滚动技巧
-```bash
-# 可以横向滚动并且一一对应，很舒服了
-less -S conn.log
-```
-![](imgs/less.png)
+    ```bash
+    # 可以横向滚动并且一一对应，很舒服了
+    less -S conn.log
+    ```
+    ![](imgs/less.png)
 
 * 使用 `zeek-cut` 更“优雅”的查看日志中关注的数据列
-```bash
-# 查看conn.log中所有可用的“列名”
-grep ^#fields conn.log | tr '\t' '\n'
-# 按照“列名”输出conn.log中我们关注的一些“列”
-zeek-cut ts id.orig_h id.orig_p id.resp_h id_resp_p proto < conn.log
-# 将UNIX时间戳格式转换成人类可读的时间（但该方法对于大日志文件处理性能非常低）
-zeek-cut -d < conn.log
-```
-![](imgs/zeekcut.png)
+    ```bash
+    # 查看conn.log中所有可用的“列名”
+    grep ^#fields conn.log | tr '\t' '\n'
+    # 按照“列名”输出conn.log中我们关注的一些“列”
+    zeek-cut ts id.orig_h id.orig_p id.resp_h id_resp_p proto < conn.log
+    # 将UNIX时间戳格式转换成人类可读的时间（但该方法对于大日志文件处理性能非常低）
+    zeek-cut -d < conn.log
+    ```
+    ![](imgs/zeekcut.png)
 
 由于我个人电脑分辨率为2560*1600，一行能看的比较长，看 `conn.log` 其实不太影响，但是对于 `file.log` 就比较难受了。
 
