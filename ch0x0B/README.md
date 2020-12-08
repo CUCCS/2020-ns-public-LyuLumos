@@ -9,7 +9,7 @@
 ## 实验环境
 - 拓扑
 
-  ![](imgs/18.png)
+  ![](imgs/map.png)
 
 - 虚拟机：Kali Rolling 2020.3 x64
 - twisted-honeypots
@@ -36,7 +36,7 @@
 
     界面长这样。
 
-    ![](imgs/1.png)
+    ![](imgs/appear.png)
 
     
 
@@ -90,14 +90,14 @@
 
     连接不上...但是蜜罐监控页面和登录日志里都是有记录的。
 
-    ![](imgs/2.png)
-    ![](imgs/3.png)
+    ![](imgs/ssh.png)
+    ![](imgs/sshappear.png)
 
     
     
   - 使用`nmap`扫描搭建好的蜜罐
 
-    ![](imgs/4.png)
+    ![](imgs/nmap.png)
 
     从日志里可以看出有一次连接。但是没有记录端口扫描的记录。
 
@@ -121,23 +121,23 @@
     docker run -p 2222:2222 cowrie/cowrie
     ``` 
 
-    ![](imgs/5.png)
+    ![](imgs/install.png)
 
-    ![](imgs/6.png)
+    ![](imgs/installappear.png)
 
 - Test
   - nmap 扫描，发现开启的2222端口
-  ![](imgs/7.png)
+  ![](imgs/nmap2222.png)
   - 使用ssh登录，多试几次就能发现，使用root+任意密码都可以登录，非root无法登陆，使用 `ssh -c` 不影响结果。
 
     登录之后开始常规的尝试操作。这里我们可以从靶机的日志上查看到“攻击者”的相关操作。(jq真香)
 
 
-    ![](imgs/8.png)
+    ![](imgs/log1.png)
 
-    ![](imgs/9.png)
+    ![](imgs/log2.png)
 
-    ![](imgs/11.png)
+    ![](imgs/test.png)
 
     注：这里`apt正常`的意思不是apt命令可以正常使用，而是系统的提示是正常的，无法区别是不是蜜罐，像debian10等系统本身也是没有apt的。
 
@@ -145,23 +145,23 @@
 
     1. 连接约3min中自动断开。
 
-        ![](imgs/12.png)
+        ![](imgs/break.png)
 
     2. 表面上可以ping，但是出现了比较诡异的结果，ping第一次结果被第二次使用，可能是没有给蜜罐分配太多资源。
 
-        ![](imgs/13.png)
+        ![](imgs/ping.png)
 
     3. $PATH 赤裸裸的暴露...
    
-        ![](imgs/14.png)
+        ![](imgs/path.png)
 
     4. `rsb_release -a` 命令
 
-        ![](imgs/17.png)
+        ![](imgs/lsb.png)
 
     5. `apt-get update/remove`等命令无法使用（root权限仍提示Permission Denied），使用`install`后安装的包无法正常使用。
 
-        ![](imgs/16.png)
+        ![](imgs/asciinema.png)
 
 ## 常见的蜜罐识别和检测方法
 
@@ -181,7 +181,7 @@
 - 检测UML(User Mode Linux)。[论文的III-A](https://www.ei.ruhr-uni-bochum.de/media/emma/veroeffentlichungen/2012/08/07/Honeypots-IEEE05.pdf)阐述了具体操作。
 - 数据包时间戳分析、分析低交互蜜罐产生的网络响应来寻找差异、环境不真实导致穿帮。
 
-<!--话说我要是不取消注释是不是就不会有人看这部分了 
+<!-- 话说我要是不取消注释是不是就不会有人看这部分了 
 
 ## 未解决
 - 问题：
@@ -239,7 +239,7 @@ def getPrimes(self):
 
 （SSHFactory 调用 protocol.Factory， Factory实现了interfaces.IProtocolFactory, interfaces.ILoggingContext里面的方法）
 
-![](imgs/16.jpg) -->
+![](imgs/python.jpg) -->
 
 
 ## 参考
