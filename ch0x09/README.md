@@ -11,7 +11,7 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt install snort
 ```
-![](img/1.png)
+![](img/install.png)
 ## 实验流程
 
 ### 实验一：配置snort为嗅探模式
@@ -29,7 +29,7 @@ snort -vde
 # -q 静默操作，不显示版本欢迎信息和初始化信息
 snort -q -v -b -i eth1 "port not 22"
 ```
-![](img/2.png)
+![](img/snort_v.png)
 
 ```bash
 # 使用 CTRL-C 退出嗅探模式
@@ -40,7 +40,7 @@ snort -q -v -b -i eth1 "port not 22"
 # 上述命令用tshark等价实现如下：
 tshark -i eth1 -f "port not 22" -w 1_tshark.pcap
 ```
-![](img/3.png)
+![](img/date.png)
 
 抓到的包在这里。[1_tshark.pcap](file/1_tshark.pcap),
 [snort.log.1605598843](file/snort.log.1605598843)
@@ -53,7 +53,7 @@ tshark -i eth1 -f "port not 22" -w 1_tshark.pcap
 snort -q -A console -b -i eth1 -c /etc/snort/snort.conf -l /var/log/snort/
 ```
 
-![](img/4.png)
+![](img/conf.png)
 
 ### 实验三：自定义snort规则
 
@@ -79,7 +79,7 @@ ab -c 100 -n 10000 http://$dst_ip/hello
 ```
 
 
-![](img/6.png)
+![](img/self_rule.png)
 
 
 ### 实验四：和防火墙联动 
@@ -153,7 +153,7 @@ target     prot opt source               destination
 ```
 
 （以下是实验的显示）
-![](img/10.png)
+![](img/guard.png)
 
 ## 实验思考题
 
